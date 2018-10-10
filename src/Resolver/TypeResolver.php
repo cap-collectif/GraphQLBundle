@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Overblog\GraphQLBundle\Resolver;
 
@@ -19,17 +19,22 @@ class TypeResolver extends AbstractResolver
     /** @var EventDispatcherInterface */
     private $dispatcher;
 
-    public function setDispatcher(EventDispatcherInterface $dispatcher): void
+    public function setDispatcher(EventDispatcherInterface $dispatcher) : void
     {
         $this->dispatcher = $dispatcher;
     }
 
-    public function setCurrentSchemaName(?string $currentSchemaName): void
+    public function setCurrentSchemaName(? string $currentSchemaName) : void
     {
         $this->currentSchemaName = $currentSchemaName;
     }
 
-    protected function onLoadSolution($solution): void
+    public function getCurrentSchemaName() : ? string
+    {
+        return $this->currentSchemaName;
+    }
+
+    protected function onLoadSolution($solution) : void
     {
         if (null !== $this->dispatcher) {
             $this->dispatcher->dispatch(Events::TYPE_LOADED, new TypeLoadedEvent($solution, $this->currentSchemaName));
@@ -41,7 +46,7 @@ class TypeResolver extends AbstractResolver
      *
      * @return Type
      */
-    public function resolve($alias): ?Type
+    public function resolve($alias) : ? Type
     {
         if (null === $alias) {
             return null;
@@ -117,7 +122,7 @@ class TypeResolver extends AbstractResolver
      *
      * @return \RuntimeException
      */
-    private static function createTypeLoadingException(string $alias, \Throwable $errorOrException): \RuntimeException
+    private static function createTypeLoadingException(string $alias, \Throwable $errorOrException) : \RuntimeException
     {
         return new \RuntimeException(
             \sprintf(
@@ -129,7 +134,7 @@ class TypeResolver extends AbstractResolver
         );
     }
 
-    protected function supportedSolutionClass(): ?string
+    protected function supportedSolutionClass() : ? string
     {
         return Type::class;
     }
