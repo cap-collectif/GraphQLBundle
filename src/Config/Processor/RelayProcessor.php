@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Overblog\GraphQLBundle\Config\Processor;
 
@@ -22,7 +22,7 @@ final class RelayProcessor implements ProcessorInterface
     /**
      * {@inheritdoc}
      */
-    public static function process(array $configs): array
+    public static function process(array $configs) : array
     {
         foreach (static::RELAY_DEFINITION_MAPPING as $typeName => $definitionBuilderClass) {
             $configs = self::processRelayConfigs($typeName, $definitionBuilderClass, $configs);
@@ -36,7 +36,13 @@ final class RelayProcessor implements ProcessorInterface
         foreach ($configs as $name => $config) {
             if (isset($config['type']) && \is_string($config['type']) && $typeName === $config['type']) {
                 $config = isset($config['config']) && \is_array($config['config']) ? $config['config'] : [];
-                $config['name'] = $name;
+
+                if (empty($config['class_name'])) {
+                    $config['class_name'] = \sprintf('%sType', $name);
+                }
+                if (empty($config['name'])) {
+                    $config['name'] = $name;
+                }
 
                 /** @var MappingInterface $builder */
                 $builder = new $definitionBuilderClass();
