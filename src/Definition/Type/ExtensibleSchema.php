@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace Overblog\GraphQLBundle\Definition\Type;
 
@@ -19,6 +19,10 @@ class ExtensibleSchema extends Schema
                     $type = $typeLoader($name);
                 } catch (UnresolvableException $e) {
                     // second chance for types with un-registered name in TypeResolver
+                    
+                    // Perform full scan of the schema
+                    // Note: we should not do that in production :fear:
+                    $this->getTypeMap();
                     $type = $this->getType($name);
                 }
 
@@ -50,7 +54,7 @@ class ExtensibleSchema extends Schema
     /**
      * @param SchemaExtensionInterface $extension
      */
-    public function addExtension(SchemaExtensionInterface $extension): void
+    public function addExtension(SchemaExtensionInterface $extension) : void
     {
         $this->extensions[] = $extension;
     }
